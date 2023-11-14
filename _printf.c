@@ -38,7 +38,14 @@ int _printf(const char *format, ...)
 		else if (*format == 'd')
 		{
 			int d = va_arg(strargs, int);
+			int i = 0;
 
+			while (d[i] !='\0')
+			{
+				i++;
+				write(1, d, i);
+				lchar += i;
+			}
 		else if (*format == 'c')
 		{
 			char c = va_arg(strargs, int);
