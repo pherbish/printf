@@ -9,13 +9,13 @@ int _printf(const char *format, ...)
 {
 	int lchar = 0;
 	va_list strargs;
-	
+
 	if (format == NULL)
 	{
 		return (-1);
 	}
 	va_start(strargs, format);
-	
+
 	while (*format)
 	{
 		if (*format != '%')
@@ -33,7 +33,7 @@ int _printf(const char *format, ...)
 		if (*format == '%')
 		{
 			write(1, format, 1);
-			lchar++; 
+			lchar++;
 		}
 		else if (*format == 'c')
 		{
@@ -45,16 +45,17 @@ int _printf(const char *format, ...)
 		{
 			char *s = va_arg(strargs, char *);
 			int str_len = 0;
-			
+
 			while (s[str_len] != '\0')
 			{
 				str_len++;
 				write(1, s, str_len);
-				lchar += str_len; 
+				lchar += str_len;
 			}
+		}
 		}
 	format++;
 	}
 va_end(strargs);
-return(lchar);
+return (lchar);
 }
