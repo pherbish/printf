@@ -1,76 +1,54 @@
 #include "main.h"
 
+void print_buffer(char buffer[], int *buff_ind);
+
 /**
-  *_printf- printf function
-  *@format: print format
-  * Return: printed characters
-  */
+ * _printf - Printf function
+ * @format: format.
+ * Return: Printed chars.
+ */
+
 int _printf(const char *format, ...)
 {
-<<<<<<< HEAD
-	va_list ptr;
-	unsigned int length = 0, Q = 0;
-=======
-	int lchar = 0;
-	va_list strargs;
->>>>>>> 1f017cf772d288c24d2eba2ba598cb28f4d24d40
+	int i = 0, printed = 0, printed_chars = 0;
+	int flags, width, precision, size, buff_ind = 0;
+	va_list list;
+	char buffer[BUFF_SIZE];
 
 	if (format == NULL)
 		return (-1);
-<<<<<<< HEAD
-	va_start(ptr, format);
 
-	while (format[Q] != '\0')
-=======
-	}
-	va_start(strargs, format);
+	va_start(list, format);
 
-	while (*format)
->>>>>>> 1f017cf772d288c24d2eba2ba598cb28f4d24d40
+	for (i = 0; format && format[i] != '\0'; i++)
 	{
-		for (; format[Q] != '%' && format[Q]; Q++)
+		if (format[i] != '%')
 		{
-			write(1, &format[Q], 1);
-			length++;
+			buffer[buff_ind++] = format[i];
+			if (buff_ind == BUFF_SIZE)
+				print_buffer(buffer, &buff_ind);
+			/* write(1, &format[i], 1);*/
+			printed_chars++;
 		}
-		if (!format[Q])
+		else
 		{
-			return (length);
+			print_buffer(buffer, &buff_ind);
+			flags = get_flags(format, &i);
+			width = get_width(format, &i, list);
+			precision = get_precision(format, &i, list);
+			size = get_size(format, &i);
+			++i;
+			printed = handle_print(format, &i, list, buffer,
+				flags, width, precision, size);
+			if (printed == -1)
+				return (-1);
+			printed_chars += printed;
 		}
-		if (get_handle_format(&format[Q + 1], &length, ptr))
-		{
-			Q += 2;
-			continue;
-		}
-		if (format[Q + 1] == '%')
-		{
-<<<<<<< HEAD
-			write(1, &format[Q], 1);
-			length++;
-			Q += 2;
-			continue;
-		}
-		write(1, &format[Q], 1);
-		length++;
-		Q++;
 	}
-	va_end(ptr);
-	return (length);
-=======
-			char *s = va_arg(strargs, char *);
-			int str_len = 0;
 
-			while (s[str_len] != '\0')
-			{
-				str_len++;
-				write(1, s, str_len);
-				lchar += str_len;
-			}
-		}
-		}
-	format++;
-	}
-va_end(strargs);
-return (lchar);
->>>>>>> 1f017cf772d288c24d2eba2ba598cb28f4d24d40
+	print_buffer(buffer, &buff_ind);
+
+	va_end(list);
+
+	return (printed_chars);
 }
