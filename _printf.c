@@ -7,44 +7,40 @@
   */
 int _printf(const char *format, ...)
 {
-	int lchar = 0;
-	va_list strargs;
+	va_list ptr;
+	unsigned int length = 0, Q = 0;
 
 	if (format == NULL)
-	{return (-1); }
-	va_start(strargs, format);
+		return (-1);
+	va_start(ptr, format);
 
-	while (*format)
+	while (format[Q] != '\0')
 	{
-		if (*format != '%')
-		{write(1, format, 1);
-		lchar++; }
-		else
-	{format++;
-
-		if (*format == '\0')
-			break;
-
-		if (*format == '%')
-		{write(1, format, 1);
-			lchar++; }
-		else if (*format == 'c')
-		{char c = va_arg(strargs, int);
-				write(1, &c, 1);
-			lchar++; }
-		else if (*format == 's')
-		{char *s = va_arg(strargs, char *);
-			int str_len = 0;
-
-			while (s[str_len] != '\0')
-			{str_len++;
-			write(1, s, str_len);
-			lchar += str_len; }
+		for (; format[Q] != '%' && format[Q]; Q++)
+		{
+			write(1, &format[Q], 1);
+			length++;
 		}
+		if (!format[Q])
+		{
+			return (length);
+		}
+		if (get_handle_format(&format[Q + 1], &length, ptr))
+		{
+			Q += 2;
+			continue;
+		}
+		if (format[Q + 1] == '%')
+		{
+			write(1, &format[Q], 1);
+			length++;
+			Q += 2;
+			continue;
+		}
+		write(1, &format[Q], 1);
+		length++;
+		Q++;
 	}
-	format++;
-	}
-va_end(strargs);
-
-return (lchar);
+	va_end(ptr);
+	return (length);
 }
