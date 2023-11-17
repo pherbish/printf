@@ -9,53 +9,42 @@ int _printf(const char *format, ...)
 {
 	int lchar = 0;
 	va_list strargs;
-	
+
 	if (format == NULL)
-	{
-		return (-1);
-	}
+	{return (-1); }
 	va_start(strargs, format);
-	
+
 	while (*format)
 	{
 		if (*format != '%')
-		{
-		write(1, format, 1);
-		lchar++;
-		}
+		{write(1, format, 1);
+		lchar++; }
 		else
-		{
-		format++;
+	{format++;
 
 		if (*format == '\0')
 			break;
 
 		if (*format == '%')
-		{
-			write(1, format, 1);
-			lchar++;
-		}
+		{write(1, format, 1);
+			lchar++; }
 		else if (*format == 'c')
-		{
-			char c = va_arg(strargs, int);
+		{char c = va_arg(strargs, int);
 				write(1, &c, 1);
-			lchar++;
-		}
+			lchar++; }
 		else if (*format == 's')
-		{
-			char *s = va_arg(strargs, char *);
+		{char *s = va_arg(strargs, char *);
 			int str_len = 0;
-			
+
 			while (s[str_len] != '\0')
-			{
-				str_len++;
-				write(1, s, str_len);
-				lchar += str_len;
-			}
+			{str_len++;
+			write(1, s, str_len);
+			lchar += str_len; }
 		}
 	}
 	format++;
 	}
 va_end(strargs);
-return(lchar);
+
+return (lchar);
 }
